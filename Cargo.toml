@@ -1,6 +1,10 @@
 [package]
 name = "rust-libiperf"
 version = "0.1.0"
+license = "mit"
+homepage = "https://github.com/sielicki/rust-libiperf"
+repository = "https://github.com/sielicki/rust-libiperf"
+description = "Basic libiperf bindings with bindgen"
 authors = ["Nicholas Sielicki <sielicki@yandex.com>"]
 edition = "2018"
 
