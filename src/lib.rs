@@ -7,11 +7,9 @@ include!(concat!(env!("OUT_DIR"), "/libiperf.rs"));
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std;
-    use std::ffi::{CString};
-    use std::thread;
-    use std::time;
-    use std::sync::{Arc, Mutex, Condvar};
+    use std::ffi::CString;
+    use std::sync::{Arc, Condvar, Mutex};
+    use std::{thread, time};
 
     fn run_iperf_client_test((host, port, m, c): (String, i32, &Mutex<bool>, &Condvar)) {
         let mut started = m.lock().unwrap();
@@ -28,7 +26,12 @@ mod tests {
             }
             iperf_defaults(t);
             iperf_set_test_role(t, 'c' as i8);
-            iperf_set_test_server_hostname(t, CString::new(host).expect("Couldn't make cstring?").into_raw());
+            iperf_set_test_server_hostname(
+                t,
+                CString::new(host)
+                    .expect("Couldn't make cstring?")
+                    .into_raw(),
+            );
             iperf_set_test_server_port(t, port);
             if iperf_run_client(t) < 0 {
                 panic!("Couldn't run client");
@@ -45,7 +48,12 @@ mod tests {
             }
             iperf_defaults(t);
             iperf_set_test_role(t, 's' as i8);
-            iperf_set_test_server_hostname(t, CString::new(host).expect("Couldn't make cstring?").into_raw());
+            iperf_set_test_server_hostname(
+                t,
+                CString::new(host)
+                    .expect("Couldn't make cstring?")
+                    .into_raw(),
+            );
             iperf_set_test_server_port(t, port);
 
             {
@@ -70,6 +78,6 @@ mod tests {
             create_iperf_server_test(("127.0.0.1".to_string(), 1337, lock, cvar));
         });
         let (lock, cvar) = &*pair;
-        run_iperf_client_test(("127.0.0.1".to_string(), 1337, lock, cvar)); 
+        run_iperf_client_test(("127.0.0.1".to_string(), 1337, lock, cvar));
     }
 }
